@@ -1,34 +1,34 @@
-# Architectural Overview
+# Descripción General de la Arquitectura
 
-This document details the system architecture, relational database design, data flow automation, and core structural modules of the **Enterprise Inspection Management Platform**.
+Este documento detalla la arquitectura del sistema, el diseño de la base de datos relacional, la automatización del flujo de datos y los módulos estructurales clave de la **Enterprise Inspection Management Platform**.
 
 ---
 
-## 1. System Topology & Technology Stack
+## 1. Topología del Sistema y Stack Tecnológico
 
-The platform implements a decoupled serverless architecture utilizing the Google Workspace ecosystem and the AppSheet Core engine. Core responsibilities are distributed across the following layers:
+La plataforma implementa una arquitectura Serverless desacoplada utilizando el ecosistema de Google Workspace y el motor de AppSheet Core. Las responsabilidades principales se distribuyen en las siguientes capas:
 
-| Layer | Component | Implementation |
+| Capa | Componente | Implementación |
 | :--- | :--- | :--- |
-| **Frontend / Client** | AppSheet Native Framework | Responsive mobile/tablet interface, client-side data validation, dynamic UI formatting, and local caching. |
-| **Backend / Database** | Google Sheets & Cloud Engines | Relational relational schema, AppSheet virtual columns for real-time calculations, and row-level security (RLS) filters. |
-| **Automation Engine** | AppSheet Automation Bots | Asynchronous document synthesis pipeline, event-driven webhooks, and trigger-based data synchronization. |
-| **Storage & Assets** | Google Drive Enterprise | Structured cloud binary storage acting as the primary repository for evidence photographs and compiled PDF outputs. |
+| **Frontend / Cliente** | Framework Nativo de AppSheet | Interfaz adaptativa (móvil/tablet), validación de datos en el lado del cliente, formateo dinámico de UI y almacenamiento en caché local. |
+| **Backend / Base de Datos** | Google Sheets y Motores en la Nube | Esquema relacional estructurado, columnas virtuales de AppSheet para cálculos en tiempo real y filtros de seguridad a nivel de fila (RLS). |
+| **Motor de Automatización** | Bots de Automatización de AppSheet | Pipeline asíncrono de síntesis de documentos, webhooks basados en eventos y sincronización de datos por disparadores. |
+| **Almacenamiento y Recursos** | Google Drive Enterprise | Almacenamiento binario en la nube que actúa como el repositorio principal para los reportes PDF consolidados y las plantillas de estructura. |
 
 ---
 
-## 2. Relational Schema & Data Modeling
+## 2. Esquema Relacional y Modelado de Datos
 
-The relational database enforces a strict hierarchical structural design (One-to-Many). The Inspection Master entity controls metadata and synchronization states, routing specific transactional data to individual engineering submodules.
+La base de datos impone un diseño estructural jerárquico estricto de uno a muchos (One-to-Many). La entidad maestra de Inspección controla los metadatos y los estados de sincronización, enrutando los datos transaccionales específicos a cada submódulo de ingeniería.
 
 ```text
-[Project Entity]
+[Entidad Proyecto]
    │
-   └───► [Inspection Master Record] (Status & Metadata Control)
+   └───► [Registro Maestro de Inspección] (Control de Estado y Metadatos)
             │
-            ├───► [Electrical Inspection Module] ───────► [Evidence Photographs]
-            ├───► [Black Water Inspection Module] ──────► [Evidence Photographs]
-            ├───► [Storm Water Inspection Module] ──────► [Evidence Photographs]
-            ├───► [Fire Suppression Module] ────────────► [Evidence Photographs]
-            ├───► [Service Entrance Isolation Module] ──► [Evidence Photographs]
-            └───► [Potable Water Inspection Module] ────► [Evidence Photographs]
+            ├───► [Módulo de Inspección Eléctrica]
+            ├───► [Módulo de Inspección de Aguas Negras]
+            ├───► [Módulo de Inspección de Aguas Pluviales]
+            ├───► [Módulo de Sistemas de Supresión de Incendios]
+            ├───► [Módulo de Pruebas de Aislamiento de Acometida]
+            └───► [Módulo de Inspección de Agua Potable]
