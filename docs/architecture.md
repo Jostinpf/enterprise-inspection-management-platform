@@ -1,176 +1,34 @@
-# Architecture Overview
+# Architectural Overview
 
-## Project Summary
-
-Enterprise Inspection Management Platform developed using AppSheet and Google Sheets.
-
-The system centralizes inspection workflows for multiple engineering disciplines, allowing inspectors to perform field inspections, capture photographic evidence, generate PDF reports automatically, and maintain full traceability of project records.
+This document details the system architecture, relational database design, data flow automation, and core structural modules of the **Enterprise Inspection Management Platform**.
 
 ---
 
-## Technology Stack
+## 1. System Topology & Technology Stack
 
-### Frontend
-- AppSheet Mobile Application
-- Responsive mobile interface
-- Tablet compatible
+The platform implements a decoupled serverless architecture utilizing the Google Workspace ecosystem and the AppSheet Core engine. Core responsibilities are distributed across the following layers:
 
-### Backend
-- Google Sheets Database
-- AppSheet Automation Bots
-- AppSheet Virtual Columns
-- AppSheet Actions
-- AppSheet Security Filters
-
-### Reporting
-- Automated PDF Generation
-- Dynamic Word Templates
-- Structured Engineering Reports
-
-### Storage
-- Google Drive
-- Image Repository
-- PDF Repository
+| Layer | Component | Implementation |
+| :--- | :--- | :--- |
+| **Frontend / Client** | AppSheet Native Framework | Responsive mobile/tablet interface, client-side data validation, dynamic UI formatting, and local caching. |
+| **Backend / Database** | Google Sheets & Cloud Engines | Relational relational schema, AppSheet virtual columns for real-time calculations, and row-level security (RLS) filters. |
+| **Automation Engine** | AppSheet Automation Bots | Asynchronous document synthesis pipeline, event-driven webhooks, and trigger-based data synchronization. |
+| **Storage & Assets** | Google Drive Enterprise | Structured cloud binary storage acting as the primary repository for evidence photographs and compiled PDF outputs. |
 
 ---
 
-## Core Modules
+## 2. Relational Schema & Data Modeling
 
-### Inspection Management
+The relational database enforces a strict hierarchical structural design (One-to-Many). The Inspection Master entity controls metadata and synchronization states, routing specific transactional data to individual engineering submodules.
 
-Master inspection record controlling all inspection modules.
-
-Modules include:
-
-- Electrical Inspections
-- Black Water Inspections
-- Storm Water Inspections
-- Fire Suppression Systems
-- Service Entrance Isolation Tests
-- Potable Water Inspections
-
----
-
-### Electrical Inspection Module
-
-Features:
-
-- Panel validation checklist
-- Electrical measurements
-- Voltage verification
-- Torque verification
-- Cable identification review
-- Safety validations
-- Evidence photographs
-
----
-
-### Water Inspection Modules
-
-Features:
-
-- Initial pressure tests
-- Final pressure tests
-- Duration calculations
-- Result determination
-- Inspection approvals
-- Evidence photographs
-
----
-
-### Fire Suppression Module
-
-Features:
-
-- Pressure testing
-- Compliance verification
-- Engineering approvals
-- Automated reporting
-
----
-
-### Service Entrance Isolation Module
-
-Features:
-
-- Electrical isolation testing
-- Resistance measurements
-- Equipment verification
-- Validation checklist
-- Evidence photographs
-
----
-
-## Automation Architecture
-
-### Automated PDF Generation
-
-Workflow:
-
-1. Inspector completes inspection
-2. Automation Bot executes
-3. Report template is populated
-4. PDF is generated
-5. File is stored automatically
-6. PDF becomes available from inspection record
-
----
-
-### Status Tracking
-
-Inspection statuses:
-
-- Pending
-- Completed
-
-Status is calculated automatically through virtual columns.
-
----
-
-## Relational Structure
-
-Project
-│
-└── Inspection
-│
-├── Electrical Inspection
-├── Black Water Inspection
-├── Storm Water Inspection
-├── Fire Suppression Inspection
-├── Service Entrance Isolation Inspection
-└── Potable Water Inspection
-
-Each inspection can contain multiple evidence photographs.
-
----
-
-## User Experience Features
-
-- Mobile-first design
-- Dynamic inspection forms
-- Conditional formatting
-- One-click PDF generation
-- Inspection status indicators
-- Direct access to completed inspections
-
----
-
-## Security
-
-- Role-based access
-- Controlled data entry
-- Centralized cloud storage
-- Automated document generation
-
----
-
-## Future Enhancements
-
-Planned improvements:
-
-- Dashboard analytics
-- KPI reporting
-- Inspector performance metrics
-- Project-level statistics
-- Historical inspection analysis
-- Expanded evidence management
+```text
+[Project Entity]
+   │
+   └───► [Inspection Master Record] (Status & Metadata Control)
+            │
+            ├───► [Electrical Inspection Module] ───────► [Evidence Photographs]
+            ├───► [Black Water Inspection Module] ──────► [Evidence Photographs]
+            ├───► [Storm Water Inspection Module] ──────► [Evidence Photographs]
+            ├───► [Fire Suppression Module] ────────────► [Evidence Photographs]
+            ├───► [Service Entrance Isolation Module] ──► [Evidence Photographs]
+            └───► [Potable Water Inspection Module] ────► [Evidence Photographs]
